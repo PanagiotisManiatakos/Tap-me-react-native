@@ -1,10 +1,18 @@
 import { useNavigation } from '@react-navigation/core'
+import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { signOut } from 'firebase/auth'
 import React from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import { auth } from '../firebase'
+import UserAvatar from '../components/UserAvatar'
+import { Sizes } from 'rn-avatar'
+import Setting from './Setting';
+import SignUp from './SignUp';
+import { AntDesign } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons'; 
+import PlayGround from './PlayGround';
 
-const Home = () => {
+const HomeScreen = () => {
     const navigation = useNavigation();
 
     const handleSignOut = () => {
@@ -15,6 +23,7 @@ const Home = () => {
 
     return (
         <View style={styles.container}>
+            <UserAvatar size={Sizes.LARGE} title={auth.currentUser?.email} />
             <Text>Email:{auth.currentUser?.email}</Text>
             <TouchableOpacity
                 style={styles.button}
@@ -24,6 +33,53 @@ const Home = () => {
             </TouchableOpacity>
         </View>
     )
+}
+
+const Tab = createMaterialBottomTabNavigator();
+function Home() {
+    return (
+        <Tab.Navigator
+            initialRouteName="Home"
+            activeColor="#212529"
+            inactiveColor="black"
+            barStyle={{ backgroundColor: '#ffc404' }}
+            shifting={true}
+        >
+            <Tab.Screen name="Homsse" component={HomeScreen}
+                options={{
+                    tabBarLabel: 'Homeeeee',
+                    tabBarIcon: () => (
+                        <AntDesign name="apple1" size={18} color="#212529" />
+                    ),
+                }} 
+            />
+            <Tab.Screen name="Settings" component={Setting} options={{
+                    tabBarLabel: 'Homeeeee',
+                    tabBarIcon: () => (
+                        <AntDesign name="apple1" size={18} color="#212529" />
+                    ),
+                }} 
+            />
+            <Tab.Screen name="Home" component={PlayGround} options={{
+                    tabBarIcon: () => (
+                        <FontAwesome name="bitcoin" size={24} color="#212529" />
+                    ),
+                }} 
+            />
+            <Tab.Screen name="SignUp" component={SignUp} options={{
+                    tabBarLabel: 'Homeeeee',
+                    tabBarIcon: () => (
+                        <AntDesign name="apple1" size={18} color="#212529" />
+                    ),
+                }} />
+            <Tab.Screen name="SignUssp" component={SignUp}  options={{
+                    tabBarLabel: 'Profile',
+                    tabBarIcon: () => (
+                        <FontAwesome name="user" size={18} color="#212529" />
+                    ),
+                }} />
+        </Tab.Navigator>
+    );
 }
 
 export default Home

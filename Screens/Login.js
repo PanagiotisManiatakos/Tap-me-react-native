@@ -18,6 +18,11 @@ import * as FacebookAuthentication from 'expo-facebook';
 import Toast from 'react-native-root-toast';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as Crypto from 'expo-crypto';
+import {
+    GOOGLE_ANDROID_CLIENT_ID,
+    GOOGLE_IOS_CLIENT_ID,
+    FACEBOOK_APP_ID
+} from '@env';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -48,6 +53,7 @@ const Login = () => {
             .then(userCredentials => {
                 const user = userCredentials.user;
                 console.log(user.email);
+                console.log(user.photoURL);
             })
             .catch((error) => {
                 switch (error.code) {
@@ -76,8 +82,8 @@ const Login = () => {
 
     const handleGoogleLogin = () => {
         const config = {
-            androidClientId: '611972076865-he47js7flm8fda1o0ro67p83jbes8pi8.apps.googleusercontent.com',
-            iosClientId: '611972076865-uhftnv10a9iogn94075lvg6t8itcj5in.apps.googleusercontent.com',
+            androidClientId: `${GOOGLE_ANDROID_CLIENT_ID}`,
+            iosClientId: `${GOOGLE_IOS_CLIENT_ID}`,
             scopes: ['profile', 'email']
         }
         GoogleAuthentication
@@ -104,14 +110,12 @@ const Login = () => {
     }
 
     const handleFacebookLogin = async () => {
-        const appId = '304200618313618';
-        await FacebookAuthentication.initializeAsync({ 'appId': appId })
+        await FacebookAuthentication.initializeAsync({ 'appId': FACEBOOK_APP_ID })
         const permissions = ['public_profile', 'email'];  // Permissions required, consult Facebook docs
         FacebookAuthentication
             .logInWithReadPermissionsAsync({ permissions })
             .then((logInResult) => {
                 if (logInResult.type === 'success') {
-                    console.log(logInResult);
                     const credential = FacebookAuthProvider.credential(logInResult.token);
                     // console.log(credential);
                     return signInWithCredential(auth, credential);  // Sign in with Facebook credential
